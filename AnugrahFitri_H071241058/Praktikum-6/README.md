@@ -1,2 +1,2 @@
-link video penjelasan tugas praktikum-2
-https://youtu.be/wTcuWB6jyvs
+link video penjelasan tugas praktikum-6
+https://youtu.be/ibBgEPd2L3w
