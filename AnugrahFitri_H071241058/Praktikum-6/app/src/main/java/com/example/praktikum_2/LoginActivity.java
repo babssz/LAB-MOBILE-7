@@ -19,7 +19,6 @@ public class LoginActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        // Apply theme before super.onCreate
         SharedPreferences themePrefs = getSharedPreferences("ThemePrefs", Context.MODE_PRIVATE);
         boolean isDarkMode = themePrefs.getBoolean("isDarkMode", true);
         if (isDarkMode) {
@@ -36,6 +35,19 @@ public class LoginActivity extends AppCompatActivity {
         btnLogin = findViewById(R.id.btnLogin);
         tvGoToRegister = findViewById(R.id.tvGoToRegister);
 
+        SharedPreferences userPrefs = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
+
+        if (!userPrefs.contains("ira.fitri4343_password")) {
+            SharedPreferences.Editor editor = userPrefs.edit();
+            editor.putString("ira.fitri4343_fullName", "Anugrah Fitri Novanda");
+            editor.putString("ira.fitri4343_password", "ira123");
+            editor.putString("ira.fitri4343_bio", "Universitas Hasanuddin\nSistem Informasi 2024");
+            editor.apply();
+        }
+
+        etUsername.setText("ira.fitri4343");
+        etPassword.setText("ira123");
+
         btnLogin.setOnClickListener(v -> {
             String username = etUsername.getText().toString();
             String password = etPassword.getText().toString();
@@ -43,12 +55,14 @@ public class LoginActivity extends AppCompatActivity {
             if (username.isEmpty() || password.isEmpty()) {
                 Toast.makeText(this, "Harap isi semua kolom", Toast.LENGTH_SHORT).show();
             } else {
-                // Mock login logic
-                SharedPreferences userPrefs = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
-                String registeredUser = userPrefs.getString("username", "admin");
-                String registeredPass = userPrefs.getString("password", "admin123");
+                String registeredPass = userPrefs.getString(username + "_password", null);
 
-                if (username.equals(registeredUser) && password.equals(registeredPass)) {
+                if (registeredPass != null && password.equals(registeredPass)) {
+                    userPrefs.edit()
+                            .putBoolean("isLoggedIn", true)
+                            .putString("currentUser", username)
+                            .apply();
+                    
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     startActivity(intent);
                     finish();

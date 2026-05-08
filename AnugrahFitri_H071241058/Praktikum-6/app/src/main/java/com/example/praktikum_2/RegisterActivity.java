@@ -19,7 +19,6 @@ public class RegisterActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        // Apply theme
         SharedPreferences themePrefs = getSharedPreferences("ThemePrefs", Context.MODE_PRIVATE);
         boolean isDarkMode = themePrefs.getBoolean("isDarkMode", true);
         if (isDarkMode) {
@@ -47,16 +46,21 @@ public class RegisterActivity extends AppCompatActivity {
             } else if (password.length() < 6) {
                 Toast.makeText(this, "Password minimal 6 karakter", Toast.LENGTH_SHORT).show();
             } else {
-                // Save user data to SharedPreferences
                 SharedPreferences userPrefs = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
+                
+                if (userPrefs.contains(username + "_password")) {
+                    Toast.makeText(this, "Username sudah terdaftar", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 SharedPreferences.Editor editor = userPrefs.edit();
-                editor.putString("fullName", fullName);
-                editor.putString("username", username);
-                editor.putString("password", password);
+                editor.putString(username + "_fullName", fullName);
+                editor.putString(username + "_password", password);
+                editor.putString(username + "_bio", "Halo! Saya baru di Instagram.");
                 editor.apply();
 
                 Toast.makeText(this, "Registrasi Berhasil!", Toast.LENGTH_SHORT).show();
-                finish(); // Go back to Login
+                finish();
             }
         });
 
